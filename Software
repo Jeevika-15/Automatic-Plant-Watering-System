@@ -1,26 +1,21 @@
 from machine import ADC, Pin
 from time import sleep
 
-# LED connected to GPIO 2
 led = Pin(2, Pin.OUT)
 
-# Moisture sensor connected to ADC pin 34
+# Initialize ADC on pin 34 (input from moisture sensor)
 moisture = ADC(Pin(34))
-moisture.atten(ADC.ATTN_11DB)      # 0–3.3V range
-moisture.width(ADC.WIDTH_12BIT)    # 12-bit resolution (0–4095)
-
-# Threshold (calibrated based on your sensor's readings)
-DRY_THRESHOLD = 3000
+moisture.atten(ADC.ATTN_11DB)    # Full 0–3.3V range
+moisture.width(ADC.WIDTH_12BIT)  # 12-bit resolution (0–4095)
 
 while True:
     value = moisture.read()
     print("Moisture Level:", value)
-    
-    if value > DRY_THRESHOLD:
+    sleep(1)
+
+    if value > 3000:  
         led.off()
         print("LED OFF — Soil is dry")
     else:
         led.on()
         print("LED ON — Soil is wet")
-    
-    sleep(1)
